@@ -1,0 +1,365 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{
+  overflow-x: hidden;
+  background-color: rgb(31 41 55);
+}
+.pelicula-card {
+    transition: transform 0.7s;
+  }
+  
+  .pelicula-card.hovered {
+    transform: rotateY(180deg);
+  }
+  
+  .pelicula-details {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transform: rotateY(-180deg);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+  
+  .pelicula-card:hover .pelicula-details {
+    opacity: 1;
+  }
+.botonInicio{
+    display: inline-block;
+    border-radius: 4px;
+    background-color: #3d405b;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 17px;
+    padding: 16px;
+    width: 130px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+   }
+   
+   .botonInicio span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+   }
+   
+   .botonInicio span:after {
+    content: '»';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -15px;
+    transition: 0.5s;
+   }
+   
+   .botonInicio:hover span {
+    padding-right: 15px;
+   }
+   
+   .botonInicio:hover span:after {
+    opacity: 1;
+    right: 0;
+   }
+
+  .contenedor-pelicula { /* Fondo oscuro */
+  color: white;
+  padding: 20px;
+  font-size: 18px; /* Tamaño de fuente aumentado */
+}
+
+.titulo-pelicula h2 {
+  font-size: 2em; /* Tamaño de fuente más grande para el título */
+  margin-bottom: 20px;
+}
+
+.contenido-pelicula {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start; /* Cambiado de space-between a flex-start */
+}
+
+.imagen-pelicula img {
+  width: 50rem;   /* Aumenta el tamaño máximo de la imagen */
+  height: 44rem;
+  display: block;
+  margin: 0 auto; /* Centrar la imagen */
+  border-radius: 5%;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); /* Agrega una sombra con color negro y opacidad */
+}
+
+.info-pelicula {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  max-width: calc(100% - 50px); 
+  min-width: calc(100% - 500px);
+  margin-top: 1%;/* Ajusta según el nuevo tamaño de la imagen */
+}
+
+.columna {
+  flex: 1;
+  min-width: 10rem; /* Ajusta según tus necesidades */
+  margin: 0x;
+}
+
+.detalle-pelicula h3 {
+  margin-bottom: 5px; /* Espacio entre el título y el valor */
+  font-size: 1.4em; /* Tamaño de fuente más grande para el título */
+  color: #d7d8d8; /* Un color ligeramente diferente para el título, si lo deseas */
+}
+
+.detalle-pelicula p {
+  margin-bottom: 60px; 
+  font-size: 1.1em;/* Espacio después de cada detalle */
+}
+
+/* Media queries para hacerlo responsive */
+@media screen and (min-width: 768px) {
+  .contenido-pelicula {
+    flex-wrap: nowrap;
+  }
+
+  .columna {
+    min-width: 48%; /* Ajusta según tus necesidades */
+    margin: 0 0 0 20px;
+  }
+
+  .imagen-pelicula img {
+    max-width: 100%;
+  }
+
+  .info-pelicula {
+    max-width: calc(100% - 20px); /* Ajusta según el nuevo tamaño de la imagen */
+  }
+}
+.video-responsive {
+  overflow: hidden;
+  padding-bottom: 56.25%;
+  position: relative;
+  height: 0;
+}
+
+.video-responsive iframe {
+  left: 0;
+  top: 0;
+  height: 50%;
+  width: 50%;
+  position: absolute;
+}
+
+.heart-container {
+  --heart-color: rgb(91, 173, 255);
+  position: relative;
+  width: 50px;
+  height: 50px;
+  transition: .3s;
+}
+
+.heart-container .checkbox {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 20;
+  cursor: pointer;
+}
+
+.heart-container .svg-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.heart-container .svg-outline,
+        .heart-container .svg-filled {
+  fill: var(--heart-color);
+  position: absolute;
+}
+
+.heart-container .svg-filled {
+  animation: keyframes-svg-filled 1s;
+  display: none;
+}
+
+.heart-container .svg-celebrate {
+  position: absolute;
+  animation: keyframes-svg-celebrate .5s;
+  animation-fill-mode: forwards;
+  display: none;
+  stroke: var(--heart-color);
+  fill: var(--heart-color);
+  stroke-width: 2px;
+}
+
+.heart-container .checkbox:checked~.svg-container .svg-filled {
+  display: block
+}
+
+.heart-container .checkbox:checked~.svg-container .svg-celebrate {
+  display: block
+}
+
+@keyframes keyframes-svg-filled {
+  0% {
+    transform: scale(0);
+  }
+
+  25% {
+    transform: scale(1.2);
+  }
+
+  50% {
+    transform: scale(1);
+    filter: brightness(1.5);
+  }
+}
+
+@keyframes keyframes-svg-celebrate {
+  0% {
+    transform: scale(0);
+  }
+
+  50% {
+    opacity: 1;
+    filter: brightness(1.5);
+  }
+
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+    display: none;
+  }
+}
+
+.animated-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 36px;
+  border: 4px solid;
+  border-color: transparent;
+  font-size: 16px;
+  background-color: inherit;
+  border-radius: 100px;
+  font-weight: 600;
+  color: rgb(91, 173, 255);
+  box-shadow: 0 0 0 2px rgb(91, 173, 255);
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.animated-button svg {
+  position: absolute;
+  width: 24px;
+  fill: rgb(91, 173, 255);
+  z-index: 9;
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.animated-button .arr-1 {
+  right: 16px;
+}
+
+.animated-button .arr-2 {
+  left: -25%;
+}
+
+.animated-button .circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  background-color: rgb(91, 173, 255);
+  border-radius: 50%;
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.animated-button .text {
+  position: relative;
+  z-index: 1;
+  transform: translateX(-12px);
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.animated-button:hover {
+  box-shadow: 0 0 0 12px transparent;
+  color: #212121;
+  border-radius: 100px;
+}
+
+.animated-button:hover .arr-1 {
+  right: -25%;
+}
+
+.animated-button:hover .arr-2 {
+  left: 16px;
+}
+
+.animated-button:hover .text {
+  transform: translateX(12px);
+}
+
+.animated-button:hover svg {
+  fill: #212121;
+}
+
+.animated-button:active {
+  scale: 0.95;
+  box-shadow: 0 0 0 4px rgb(150, 173, 255);
+}
+
+.animated-button:hover .circle {
+  width: 220px;
+  height: 220px;
+  opacity: 1;
+}
+
+.buttonContainer {
+  margin-left: 6%;
+  margin-top: 1%;
+  display: flex;
+  gap: 30px;
+}
+
+.volver {
+  background-color: white;
+  color: black;
+  border-radius: 10em;
+  font-size: 17px;
+  font-weight: 600;
+  padding: 1em 2em;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  border: 1px solid black;
+  box-shadow: 0 0 0 0 black;
+}
+
+.volver:hover {
+  transform: translateY(-4px) translateX(-2px);
+  box-shadow: 2px 5px 0 0 black;
+};
+
+.volver:active {
+  transform: translateY(2px) translateX(1px);
+  box-shadow: 0 0 0 0 black;
+};
