@@ -11,7 +11,6 @@ const FavBottom = ({ id, titulo, imagen, valoracion, generos }) =>{
         if (!isAlreadyFavorite) {
           existingFavorites.push(newFavorite);
           localStorage.setItem('Favoritos', JSON.stringify(existingFavorites));
-          alert('Añadido a favoritos'); 
         } else {
           alert('Esta película ya está en tus favoritos'); 
         }
