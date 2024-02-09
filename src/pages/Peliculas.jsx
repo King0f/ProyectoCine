@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSearchFilms} from '../slices/Thunks';
 
-const PeliculaCard = ({ pelicula }) => {
+const PeliculaCard = ({ pelicula}) => {
   const [hovered, setHovered] = useState(false);
-  const [generos, setGeneros] = useState([]);
-  const [actores, setActores] = useState([]);
-
 
   const handleMouseEnter = () => {
     setHovered(true);
@@ -17,42 +16,6 @@ const PeliculaCard = ({ pelicula }) => {
 
   const route = "/InfoPelicula/" + pelicula.id;
   const imgUrl = `https://image.tmdb.org/t/p/w500${pelicula.poster_path}`; // TMDb usa rutas relativas para las imágenes
-  useEffect(() => {
-    // Obtener géneros
-    const obtenerGeneros = async () => {
-      try {
-        const apiKey = 'fcb629248cfa9804d5e0c9dec95073b5';
-        const url = `https://api.themoviedb.org/3/movie/${pelicula.id}?api_key=${apiKey}&language=es-ES`;
-        const response = await fetch(url);
-        const data = await response.json();
-
-        if (data.genres) {
-          setGeneros(data.genres);
-        }
-      } catch (error) {
-        console.error('Error al obtener géneros:', error);
-      }
-    };
-
-    // Obtener actores
-    const obtenerActores = async () => {
-      try {
-        const apiKey = 'fcb629248cfa9804d5e0c9dec95073b5';
-        const url = `https://api.themoviedb.org/3/movie/${pelicula.id}/credits?api_key=${apiKey}`;
-        const response = await fetch(url);
-        const data = await response.json();
-
-        if (data.cast) {
-          setActores(data.cast);
-        }
-      } catch (error) {
-        console.error('Error al obtener actores:', error);
-      }
-    };
-
-    obtenerGeneros();
-    obtenerActores();
-  }, [pelicula.id]);
 
   return (
     <div className={`bg-black max-w-sm rounded-lg overflow-hidden shadow-lg pelicula-card ${hovered ? 'hovered' : ''}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
@@ -67,8 +30,6 @@ const PeliculaCard = ({ pelicula }) => {
             <p className="font-bold text-xl mb-2">{pelicula.title}</p>
             <p><b>Año</b></p> 
             <p>{pelicula.release_date ? pelicula.release_date.substring(0, 4) : 'Desconocido'}</p>
-            <p><b>Género:</b></p> 
-            <p>{generos.map(genre => genre.name).join(', ')}</p>
             <p><b>Valoración</b></p> 
             <p>{pelicula.vote_average ? pelicula.vote_average : 'N/A'}</p>
           </div>
@@ -81,42 +42,16 @@ const PeliculaCard = ({ pelicula }) => {
 
 function Peliculas() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  const dispatch = useDispatch();
+  const {searchFilms} = useSelector( state => state.films)
 
   const handleSearch = async () => {
-    try {
-      const url = `https://api.themoviedb.org/3/search/movie?api_key=fcb629248cfa9804d5e0c9dec95073b5&language=es-ES&query=${encodeURIComponent(searchQuery)}`;
-      
-      const response = await fetch(url);
-      const data = await response.json();
-
-      if (data && data.results) {
-        setSearchResults(data.results);
-      } else {
-        setSearchResults([]);
-      }
-    } catch (error) {
-      console.error('Error al realizar la búsqueda:', error);
-      setSearchResults([]);
-    }
+    dispatch(getSearchFilms(searchQuery));
   };
 
-  const obtenerPeliculasMejorValoradas = async () => {
-    try {
-      const url = `https://api.themoviedb.org/3/movie/top_rated?api_key=fcb629248cfa9804d5e0c9dec95073b5&language=es-ES`;
-      const response = await fetch(url);
-      const data = await response.json();
-
-      if (data && data.results) {
-        setSearchResults(data.results);
-      }
-    } catch (error) {
-      console.error('Error al obtener películas mejor valoradas:', error);
-    }
-  };
   
   useEffect(() => {
-    obtenerPeliculasMejorValoradas();
+    dispatch(getSearchFilms());
   }, []);
 
   return (
@@ -141,7 +76,7 @@ function Peliculas() {
 
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {searchResults.map((pelicula) => (
+        {searchFilms.map((pelicula) => (
           <PeliculaCard key={pelicula.id} pelicula={pelicula} />
         ))}
       </div>

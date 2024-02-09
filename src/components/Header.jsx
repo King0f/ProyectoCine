@@ -10,6 +10,8 @@ export const Header = () => {
   </div>
   <nav className="flex gap-4 items-center">
     <NavLink to="/Peliculas" activeClassName="border-b-2 border-gray-400">Catálogo</NavLink>
+    <NavLink to="/Entradas" activeClassName="border-b-2 border-gray-400">Mis Entradas</NavLink>
+    <NavLink to="/Favoritos" activeClassName="border-b-2 border-gray-400">Favoritos</NavLink>
   </nav>
 </header>
   );

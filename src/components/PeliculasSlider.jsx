@@ -1,26 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect} from 'react';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getFilms } from '../slices/Thunks';
 
 function PeliculasSlider() {
-  const [peliculas, setPeliculas] = useState([]);
+  const dispatch = useDispatch();
+  const {films} = useSelector( state => state.films)
 
   useEffect(() => {
-    const obtenerPeliculasPopulares = async () => {
-      const apiKey = 'fcb629248cfa9804d5e0c9dec95073b5';
-      const url = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=es-ES`;
-      try {
-        const response = await fetch(url);
-        const data = await response.json();
-        setPeliculas(data.results);
-      } catch (error) {
-        console.error('Error al obtener películas populares:', error);
-      }
-    };
-
-    obtenerPeliculasPopulares();
+    dispatch(getFilms());
   }, []);
 
   const settings = {
@@ -38,7 +29,7 @@ function PeliculasSlider() {
   return (
     <div className="h-screen">
       <Slider {...settings}>
-        {peliculas.map((pelicula) => (
+        {films?.map((pelicula) => (
           <div key={pelicula.id} className="h-[92vh] flex items-center justify-start relative object-fill">
             <div 
               className="h-full w-full bg-cover bg-center absolute" 

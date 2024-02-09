@@ -1,27 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from 'react-router-dom';
 import PeliculasSlider from '../components/PeliculasSlider';
+import { useDispatch, useSelector } from 'react-redux';
+import { getHorrorFilms } from '../slices/Thunks';
 
 function Inicio() {
-  const [peliculasPopulares, setPeliculasPopulares] = useState([]);
-
+  const dispatch = useDispatch();
+  const {horrorFilms} = useSelector( state => state.films)
+  
   useEffect(() => {
-    const obtenerMejoresPeliculasTerror = async () => {
-      const apiKey = 'fcb629248cfa9804d5e0c9dec95073b5';
-      const url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=es-ES&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=27`; // El ID 27 corresponde al género "Terror"
-      try {
-        const response = await fetch(url);
-        const data = await response.json();
-        setPeliculasPopulares(data.results);
-      } catch (error) {
-        console.error('Error al obtener las mejores películas de terror:', error);
-      }
-       
-    };
-    obtenerMejoresPeliculasTerror();
+    dispatch(getHorrorFilms());
   }, []);
 
   const settings = {
@@ -64,7 +55,7 @@ function Inicio() {
     <PeliculasSlider/>
     <h2 className="text-2xl font-bold mb-4 text-center">Descubre nuestras mejores peliculas de terror</h2>
     <Slider {...settings} className="border-solid border-2 border-gray-700"> {/* Estilos actualizados para el Slider */}
-      {peliculasPopulares.map(pelicula => (
+      {horrorFilms.map(pelicula => (
         <div key={pelicula.id} className="relative">
           <img 
             src={`https://image.tmdb.org/t/p/w500${pelicula.poster_path}`} 

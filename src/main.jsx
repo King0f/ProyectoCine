@@ -18,6 +18,11 @@ import { Header } from './components/Header.jsx';
 import { Footer } from './components/Footer.jsx';
 import PaginaFinal from './pages/PaginaFinal.jsx';
 
+import store from './store/store.js';
+import { Provider } from 'react-redux'
+import MisEntradas from './pages/MisEntradas.jsx';
+import Favoritos from './pages/Favoritos.jsx';
+
 
 function AppLayout() {
   return <>
@@ -44,6 +49,14 @@ const router = createBrowserRouter([
       element: <Peliculas />,
     },
     {
+    path: "/Entradas",
+      element: <MisEntradas />,
+    },
+    {
+      path: "/Favoritos",
+        element: <Favoritos />,
+      },
+    {
       path: "/InfoPelicula/:id",
       element: <InfoPelicula/>,
       loader: InfoPeliculaLoader
@@ -59,6 +72,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
+    <Provider store={store}>
     <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>,
 )

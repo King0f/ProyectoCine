@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLoaderData } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getOneFilm} from '../slices/Thunks';
 
 export async function loader({ params }) {
   const id = params.id;
@@ -9,51 +11,71 @@ export async function loader({ params }) {
 function ComprarEntrada() {
   const { id } = useLoaderData();
   const navigate = useNavigate();
-  const [detallesPelicula, setDetallesPelicula] = useState(null);
+  const dispatch = useDispatch();
+  const {oneFilm} = useSelector( state => state.films)
   const [horario, setHorario] = useState('');
   const [numEntradas, setNumEntradas] = useState(1);
   const [compraRealizada, setCompraRealizada] = useState(false);
 
   useEffect(() => {
-    const obtenerDetallesPelicula = async () => {
-      try {
-        const apiKey = 'fcb629248cfa9804d5e0c9dec95073b5';
-        const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=es-ES&append_to_response=credits,videos`;
-        const response = await fetch(url);
-        const data = await response.json();
-
-        if (data) {
-          setDetallesPelicula({
-            titulo: data.title,
-            imagen: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
-          });
-        } 
-      } catch (error) {
-        console.error('Error al obtener detalles de la película:', error);
-      }
-    };
-
-    obtenerDetallesPelicula();
+    dispatch(getOneFilm(id));
   }, [id]);
-
   const handleCompra = () => {
-    // Lógica para procesar la compra, puedes enviar la información al servidor o realizar otras acciones necesarias.
-    setCompraRealizada(true);
+  const tituloPelicula = titulo;
+  const rutaImagen = imagen;
+  const hora = horario;
+  const numeroEntradas = numEntradas;
+  const precio = numEntradas * 7.5; // Asumiendo un precio ejemplo
+
+  // Crear un objeto con la información de la compra
+  const nuevaCompra = {
+    id: id,
+    titulo: tituloPelicula,
+    imagen: rutaImagen,
+    hora: hora,
+    entradas: numeroEntradas,
+    precio: precio
   };
-  if (compraRealizada) {
-    navigate('/resumenCompra', { state: { detallesPelicula, horario, numEntradas } });
+
+  const entradasGuardadas = localStorage.getItem("EntradasCompradas");
+  let entradasExistentes;
+  if (entradasGuardadas) {
+    // Si existe, recuperar el valor y convertirlo de nuevo a un array
+    entradasExistentes = JSON.parse(entradasGuardadas);
+    // Asegurarse de que entradasExistentes sea un array
+    if (!Array.isArray(entradasExistentes)) {
+      entradasExistentes = [entradasExistentes];
+    }
+  } else {
+    // Si no hay entradas previas, crear un array vacío
+    entradasExistentes = [];
   }
 
-  if (!detallesPelicula) {
+  // Añadir la nueva compra al array de entradas existentes
+  entradasExistentes.push(nuevaCompra);
+
+  // Guardar el array actualizado de nuevo en localStorage
+  localStorage.setItem("EntradasCompradas", JSON.stringify(entradasExistentes));
+  setCompraRealizada(true);
+  };
+  const titulo = oneFilm.title
+  const imagen = `https://image.tmdb.org/t/p/w500${oneFilm.poster_path}`
+  
+  if (compraRealizada) {
+    navigate('/resumenCompra', { state: { titulo, horario, numEntradas } });
+  }
+
+  if (!oneFilm) {
     return <p>Cargando detalles de la película...</p>;
   }
+  
   return (
     <div className="container mx-auto my-4 max-w-lg p-4  shadow-md">
       <div className="titulo-pelicula text-center text-white">
-      <h2>{detallesPelicula.titulo}</h2>
+      <h2>{titulo}</h2>
       </div>
     <div className="imagen-pelicula">
-      <img src={detallesPelicula.imagen} alt={`Poster de ${detallesPelicula.titulo}`} className="w-full rounded-md" />
+      <img src={imagen} alt={`Poster de ${titulo}`} className="w-full rounded-md" />
     </div>
     <label htmlFor="horario" className="block mt-4 text-sm font-medium text-white">
       Selecciona el horario:

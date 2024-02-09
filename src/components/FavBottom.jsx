@@ -1,8 +1,24 @@
 import React from 'react'
 
-function FavBottom(){
+const FavBottom = ({ id, titulo, imagen, valoracion, generos }) =>{
+
+    const handleAddToFavorites = () => {
+        const newFavorite = { id, titulo, imagen, valoracion, generos };
+        const existingFavorites = JSON.parse(localStorage.getItem('Favoritos')) || [];
+        
+        // Opcional: Evitar duplicados
+        const isAlreadyFavorite = existingFavorites.some(favorite => favorite.titulo === titulo);
+        if (!isAlreadyFavorite) {
+          existingFavorites.push(newFavorite);
+          localStorage.setItem('Favoritos', JSON.stringify(existingFavorites));
+          alert('Añadido a favoritos'); 
+        } else {
+          alert('Esta película ya está en tus favoritos'); 
+        }
+      };
+    
   return (
-    <div class="heart-container" title="Like">
+    <div class="heart-container" title="Like" onClick={handleAddToFavorites}>
             <input type="checkbox" class="checkbox" id="Give-It-An-Id"/>
             <div class="svg-container">
                 <svg viewBox="0 0 24 24" class="svg-outline" xmlns="http://www.w3.org/2000/svg">

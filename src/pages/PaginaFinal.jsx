@@ -3,9 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 
 function PaginaFinal() {
   const location = useLocation();
-  const { detallesPelicula, horario, numEntradas } = location.state || {};
+  const { titulo,imagen, horario, numEntradas } = location.state || {};
 
-  if (!detallesPelicula || !horario || numEntradas === undefined) {
+  if (!titulo || !horario || numEntradas === undefined) {
     return <Redirect to="/" />;
   }
 
@@ -16,7 +16,7 @@ function PaginaFinal() {
       <h1 className="text-4xl font-bold mb-4">Datos de la compra</h1>
       <div className="mb-4">
         <h3 className="text-xl font-semibold">Título de la película:</h3>
-        <p className="text-lg">{detallesPelicula ? detallesPelicula.titulo : 'No disponible'}</p>
+        <p className="text-lg">{titulo}</p>
       </div>
       <div className="mb-4">
         <h3 className="text-xl font-semibold">Número de entradas:</h3>
